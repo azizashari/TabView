@@ -20,5 +20,12 @@ public class Config {
     public static final String KEY_PERBAIKAN = "Perbaikan";
     public static final String KEY_BATAL = "Batal";
     public static final String KEY_SELESAI = "Selesai";
+
+    //JSON for load status keuangan
+    public static final String KEY_BIAYA = "biaya"; //total pendapatan per lab
+//  public static final String KEY_LABS = "nama"; //nama laboratorium
+//  public static final String KEY_TAHUN = "tahun"; //tahun
+
+
 }
 

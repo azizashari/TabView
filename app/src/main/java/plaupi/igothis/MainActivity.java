@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity
         //Adding the tabs using addTab() method
         tabLayout.addTab(tabLayout.newTab().setText("Status Pembayaran"));
         tabLayout.addTab(tabLayout.newTab().setText("Status Order"));
+        tabLayout.addTab(tabLayout.newTab().setText("Pendapatan Per Lab"));
+
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 

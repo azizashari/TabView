@@ -2,17 +2,14 @@ package plaupi.igothis;
 
 import android.app.ProgressDialog;
 import android.content.res.Configuration;
-import android.support.v4.app.Fragment;
-import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.style.RelativeSizeSpan;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -23,11 +20,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,20 +37,23 @@ import java.util.Map;
 
 import plaupi.igothis.config.Config;
 
+import static plaupi.igothis.R.id.chart1;
+
 /**
  * Created by Aziz on 11/03/2017.
  */
 
-public class Status_Pembayaran extends Fragment{
+public class Pendapatan_Perlab extends Fragment {
     public View v;
-    //variabel global
+    BarChart chart ;
+    ArrayList<BarEntry> BARENTRY ;
+    ArrayList<String> BarEntryLabels ;
+    BarDataSet Bardataset ;
+    BarData BARDATA ;
     ProgressDialog loading;
-    PieChart chart1;
-
     List<String> labs;
     List<String> year;
     Spinner spinner, spinner2;
-    ArrayList<com.github.mikephil.charting.data.Entry> Entry;
     ArrayAdapter<String> dataAdapter, dataAdapter2;
 
     @Override
@@ -67,8 +67,8 @@ public class Status_Pembayaran extends Fragment{
     //Overriden method onCreateView
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.status_pembayaran, container, false);
-        chart1 = (PieChart) v.findViewById(R.id.chart1);
+        v = inflater.inflate(R.layout.pendapatan_perlab, container, false);
+        chart = (BarChart) v.findViewById(chart1);
         spinner = (Spinner) v.findViewById(R.id.spinner);
         spinner2 = (Spinner) v.findViewById(R.id.spinner2);
 
@@ -80,19 +80,8 @@ public class Status_Pembayaran extends Fragment{
     }
 
     public void show(){
-        Entry = new ArrayList<>();
-        //BarEntryLabels = new ArrayList<String>();
-
-//        chart1 = (PieChart) getActivity().findViewById(R.id.chart1);
-        //chart1.setCenterText(generateCenterSpannableText());
-
-        // =================== Spinner untuk laboratorium ======================//
-
-        // Spinner element
-//        spinner = (Spinner) getActivity().findViewById(R.id.spinner);
-
-        // Spinner click listener
-        //spinner.setOnItemSelectedListener(this);
+        BARENTRY = new ArrayList<>();
+        BarEntryLabels = new ArrayList<String>();
 
         // Spinner Drop down elements
         labs = new ArrayList<String>();
@@ -109,10 +98,8 @@ public class Status_Pembayaran extends Fragment{
         labs.add("Listrik"); //kode 12 id 13
         labs.add("NDT"); //kode 13 id 6
 
-        // ========================= Spinner untuk Pendidikan ==============================
-
         // Spinner element
-//        spinner2 = (Spinner) getActivity().findViewById(R.id.spinner2);
+        spinner2 = (Spinner) v.findViewById(R.id.spinner2);
 
         // Spinner click listener
         //spinner2.setOnItemSelectedListener(this);
@@ -148,15 +135,15 @@ public class Status_Pembayaran extends Fragment{
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i>0){
-                    Entry.clear();
-                    //BarEntryLabels.clear();
+                    BARENTRY.clear();
+                    BarEntryLabels.clear();
                     if(spinner.getSelectedItem().equals("Tahun")){
-                        chart1.clear();
+                        chart.clear();
                     }else {
                         getData(labs.get(i), spinner.getSelectedItem().toString());
                     }
                 }else{
-                    chart1.clear();
+                    chart.clear();
                 }
                 Toast.makeText(getActivity(), labs.get(i), Toast.LENGTH_SHORT).show();
             }
@@ -171,15 +158,15 @@ public class Status_Pembayaran extends Fragment{
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i>0){
-                    Entry.clear();
-                    //BarEntryLabels.clear();
+                    BARENTRY.clear();
+                    BarEntryLabels.clear();
                     if(spinner2.getSelectedItem().equals("Laboratorium")){
-                        chart1.clear();
+                        chart.clear();
                     }else {
                         getData(spinner2.getSelectedItem().toString(), year.get(i));
                     }
                 }else{
-                    chart1.clear();
+                    chart.clear();
                 }
                 Toast.makeText(getActivity(), year.get(i), Toast.LENGTH_SHORT).show();
             }
@@ -189,6 +176,22 @@ public class Status_Pembayaran extends Fragment{
 
             }
         });
+    }
+
+    public void AddValuesToBarEntryLabels(){
+        //parameter bulan
+        BarEntryLabels.add("January");
+        BarEntryLabels.add("February");
+        BarEntryLabels.add("March");
+        BarEntryLabels.add("April");
+        BarEntryLabels.add("May");
+        BarEntryLabels.add("June");
+        BarEntryLabels.add("July");
+        BarEntryLabels.add("August");
+        BarEntryLabels.add("September");
+        BarEntryLabels.add("October");
+        BarEntryLabels.add("November");
+        BarEntryLabels.add("December");
     }
 
     //fungsi untuk mengambil data dari database
@@ -202,13 +205,12 @@ public class Status_Pembayaran extends Fragment{
 
         loading = ProgressDialog.show(getActivity(),"Mohon Tunggu","Pengambilan data..",false,false);
 
-        String url = Config.URL+ "dashboard/loadStatusPembayaran.php"; //inisialiasai url
+        String url = Config.URL+ "dashboard/loadStatusKeuangan.php"; //inisialiasai url
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 //              loading.dismiss();
-
                 showJSON(response);
 //                Toast.makeText(Status_order.this,"Masuk nih!",Toast.LENGTH_LONG).show();
             }
@@ -235,72 +237,60 @@ public class Status_Pembayaran extends Fragment{
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         requestQueue.add(stringRequest);
     }
-
     //menampilkan username dari tabel users dan aktivitas dari tabel log
-    private void showJSON(String response) {
-
+    private void showJSON(String response){
+        //listLog = (ListVie w) findViewById(R.id.listview);
+        int n = 0; //counter
         try {
             JSONArray result = new JSONArray(response);
+//            Toast.makeText(this, "BERHASIL", Toast.LENGTH_SHORT).show();
+            for (int i = 0; i < result.length(); i++) {
+                JSONObject Data = result.getJSONObject(i);
+                String a = Data.getString(Config.KEY_BIAYA);
 
-            JSONObject Data1 = result.getJSONObject(0);
-            String lunas = Data1.getString(Config.KEY_LUNAS);
-            JSONObject Data2 = result.getJSONObject(1);
-            String belumLunas = Data2.getString(Config.KEY_BELUMLUNAS);
-
-            ArrayList<Entry> entries = new ArrayList<>();
-            entries.add(new Entry(Integer.parseInt(lunas), 0));
-            entries.add(new Entry(Integer.parseInt(belumLunas), 1));
-
-            PieDataSet dataset = new PieDataSet(entries, "# of Calls");
-
-            ArrayList<String> labels = new ArrayList<String>();
-            labels.add("Lunas");
-            labels.add("Belum Lunas");
-
-            PieData data = new PieData(labels, dataset);
-            dataset.setColors(ColorTemplate.LIBERTY_COLORS); //
-            chart1.setDescription("Status Pembayaran");
-            chart1.setData(data);
-            chart1.animateY(3000);
-
-            if(lunas.equals("0") && belumLunas.equals("0")){
-                chart1.clear();
+                if(a.equals("null") ){
+                    a = "0";
+                }else{
+                    n++;
+                }
+                int biaya = Integer.parseInt(a);
+                BARENTRY.add(new BarEntry(biaya, i));
             }
-
-            chart1.saveToGallery("/sd/mychart.jpg", 85); // 85 is the quality of the image
-        } catch (JSONException e) {
+        }catch(JSONException e){
             e.printStackTrace();
 
         }
+
         //parsing json
         loading.dismiss();
-    }
-    private SpannableString generateCenterSpannableText() {
 
-        SpannableString s = new SpannableString("Status\nPembayaran");
-        s.setSpan(new RelativeSizeSpan(1.7f), 0, 17, 0);
-        //s.setSpan(new StyleSpan(Typeface.NORMAL), 3, s.length() - 10, 0);
-        //s.setSpan(new ForegroundColorSpan(Color.GRAY), 3, s.length() - 4, 0);
-        //s.setSpan(new RelativeSizeSpan(.8f), 14, s.length() - 15, 0);
-        //s.setSpan(new StyleSpan(Typeface.ITALIC), s.length() - 14, s.length(), 0);
-        //s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length() - 14, s.length(), 0);
-        return s;
-    }
+        AddValuesToBarEntryLabels();
 
-    /*public void onConfigurationChanged(Configuration newConfig) {
+        Bardataset = new BarDataSet(BARENTRY,"Total Pendapatan");
+        BARDATA = new BarData(BarEntryLabels, Bardataset);
+        Bardataset.setColor(Color.LTGRAY);
+        chart.setData(BARDATA);
+        chart.animateY(3000); //waktu animasi
+
+        if(n==0){ //jika data null
+            chart.clear();
+        }
+
+/*    public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            Toast.makeText(getActivity(), "landscape", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
             spinner.setSelection(0);
             spinner2.setSelection(0);
 
         }else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-            Toast.makeText(getActivity(), "portrait", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
             spinner.setSelection(0);
             spinner2.setSelection(0);
 
         }
     }*/
+    }
 }

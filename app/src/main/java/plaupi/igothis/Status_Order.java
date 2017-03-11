@@ -37,7 +37,7 @@ public class Status_Order extends Fragment {
 
     @Override
     public void onResume(){
-        //show();
+        show();
         super.onResume();
     }
 
@@ -45,7 +45,7 @@ public class Status_Order extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.status_order, container, false);
-
+        pieChart = (PieChart) v.findViewById(R.id.chart2);
         //show();
         return v;
         //Returning the layout file after inflating
@@ -54,7 +54,7 @@ public class Status_Order extends Fragment {
     }
 
     public void show(){
-        pieChart = (PieChart) getActivity().findViewById(R.id.chart2);
+
         pieChart.setCenterText(generateCenterSpannableText());
         getData();
     }

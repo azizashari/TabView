@@ -1,6 +1,5 @@
 package plaupi.igothis;
 
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -32,10 +31,10 @@ public class Pager extends FragmentStatePagerAdapter {
             case 1:
                 Status_Order SO = new Status_Order();
                 return SO;
-            /*case 2:
-                rabu rabu1 = new rabu();
-                return rabu1;
-            case 3:
+            case 2:
+                Pendapatan_Perlab PPL = new Pendapatan_Perlab();
+                return PPL;
+            /*case 3:
                 kamis kamis1 = new kamis();
                 return kamis1;
             case 4:
