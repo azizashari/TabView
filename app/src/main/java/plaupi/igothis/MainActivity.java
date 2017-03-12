@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity
         tabLayout.addTab(tabLayout.newTab().setText("Status Pembayaran"));
         tabLayout.addTab(tabLayout.newTab().setText("Status Order"));
         tabLayout.addTab(tabLayout.newTab().setText("Pendapatan Per Lab"));
+        tabLayout.addTab(tabLayout.newTab().setText("SPM"));
 
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);

@@ -34,15 +34,9 @@ public class Pager extends FragmentStatePagerAdapter {
             case 2:
                 Pendapatan_Perlab PPL = new Pendapatan_Perlab();
                 return PPL;
-            /*case 3:
-                kamis kamis1 = new kamis();
-                return kamis1;
-            case 4:
-                jumat jumat1 = new jumat();
-                return jumat1;
-            case 5:
-                sabtu sabtu1 = new sabtu();
-                return sabtu1;*/
+            case 3:
+                SPM spm1 = new SPM();
+                return spm1;
             default:
                 return null;
         }
